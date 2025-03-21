@@ -1,0 +1,35 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_CLASS01
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+REPORT Z_CLASS01.
+
+
+*Defining Class
+CLASS z_vehicle DEFINITION.
+PUBLIC SECTION.
+
+DATA: gv_brand TYPE string.
+
+METHODS: z_branding.
+ENDCLASS.
+
+
+*Implementing Class.
+CLASS z_vehicle IMPLEMENTATION.
+ METHOD z_branding.
+  WRITE: 'Car Brand is:',gv_brand.
+ ENDMETHOD.
+ENDCLASS.
+
+START-OF-SELECTION.
+
+*Creating Object
+DATA: gv_car TYPE REF TO z_vehicle.
+CREATE OBJECT gv_car.
+
+gv_car->gv_brand = 'SUZUKI VITTARA BREZZA'.
+gv_car->z_branding( ).

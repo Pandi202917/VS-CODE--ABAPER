@@ -1,0 +1,85 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_CLASS_BANK_ACCOUNT
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+REPORT Z_CLASS_BANK_ACCOUNT.
+
+
+
+
+CLASS Z_BANK_ACCOUNT DEFINITION.
+PUBLIC SECTION.
+
+DATA: gv_ah_name TYPE string, gv_acc_num TYPE char12, gv_bal TYPE i VALUE 1000, gv_amt TYPE i.
+
+METHODS: set_details IMPORTING i_ah_name TYPE string i_acc_num TYPE char12  i_bal TYPE i,
+
+         deposit IMPORTING gv_amt TYPE i,
+         withdraw IMPORTING gv_amt TYPE i,
+         display_details.
+
+ENDCLASS.
+
+
+
+
+CLASS Z_BANK_ACCOUNT IMPLEMENTATION.
+
+METHOD set_details.
+gv_ah_name = i_ah_name.
+gv_acc_num = i_acc_num.
+gv_bal = i_bal.
+ENDMETHOD.
+
+
+METHOD deposit.
+gv_bal = gv_bal + gv_amt.
+    WRITE: / 'Deposit successful! Amount:',gv_amt.
+ENDMETHOD.
+
+
+METHOD withdraw.
+    IF gv_bal >= gv_amt.
+      gv_bal = gv_bal - gv_amt.
+      WRITE: / 'Withdrawal successful! Amount:', gv_amt.
+    ELSE.
+      WRITE: / 'Error: Insufficient Balance!'.
+    ENDIF.
+ENDMETHOD.
+
+
+
+METHOD display_details.
+  WRITE:/'Account Holder Name:',gv_ah_name.
+  WRITE:/'Account Number:',gv_acc_num.
+  WRITE:/'Account Balance:',gv_bal.
+ENDMETHOD.
+
+ENDCLASS.
+
+
+START-OF-SELECTION.
+
+PARAMETERS: ah_name TYPE string OBLIGATORY DEFAULT 'ROHAN',
+            acc_num TYPE char12 OBLIGATORY DEFAULT '765423456789'.
+PARAMETERS: Deposit RADIOBUTTON GROUP aa DEFAULT 'X',
+            WITHDRAW RADIOBUTTON GROUP aa,
+            amt TYPE i OBLIGATORY DEFAULT '100'.
+
+
+DATA: ac TYPE REF TO Z_BANK_ACCOUNT.
+CREATE OBJECT ac.
+
+ac->set_details( i_ah_name = ah_name i_acc_num = acc_num i_bal = '1000' ).
+
+IF deposit = 'X'.
+  ac->deposit( gv_amt = amt ).
+ELSE.
+  ac->withdraw( gv_amt = amt ).
+ENDIF.
+
+
+ac->display_details( ).
