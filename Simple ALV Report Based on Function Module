@@ -1,0 +1,78 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_SIMPLE_ALV_EKKO_TASK1
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+REPORT Z_SIMPLE_ALV_EKKO_TASK1.
+
+*Defining Internal Tables & Work Area
+
+DATA: it_tb1 TYPE TABLE OF EKKO,
+            wa_tb1 TYPE EKKO.
+
+*Defining Selection Screen
+PARAMETERS: p_vendor TYPE lifnr,
+            p_sdate TYPE aedat,
+            p_edate TYPE aedat.
+
+START-OF-SELECTION.
+
+*Selection Query
+SELECT * FROM  EKKO INTO TABLE it_tb1
+         WHERE lifnr = p_vendor
+         AND aedat BETWEEN p_sdate  AND p_edate.
+
+
+*Defining FIeld Catelogue
+DATA:  it_fieldcat TYPE TABLE OF slis_fieldcat_alv,
+             wa_fieldcat TYPE slis_fieldcat_alv.
+
+
+CLEAR wa_fieldcat.
+wa_fieldcat-fieldname = 'EBELN'.
+wa_fieldcat-seltext_m = 'PO Number'.
+wa_fieldcat-col_pos = 2.
+APPEND wa_fieldcat TO it_fieldcat.
+
+CLEAR wa_fieldcat.
+wa_fieldcat-fieldname = 'LIFNR'.
+wa_fieldcat-seltext_m = 'Vendor Name'.
+wa_fieldcat-col_pos = 1.
+APPEND wa_fieldcat TO it_fieldcat.
+
+CLEAR wa_fieldcat.
+wa_fieldcat-fieldname = 'AEDAT'.
+wa_fieldcat-seltext_m = 'PO Released Date'.
+wa_fieldcat-col_pos = 3.
+APPEND wa_fieldcat TO it_fieldcat.
+
+CLEAR wa_fieldcat.
+wa_fieldcat-fieldname = 'BSART'.
+wa_fieldcat-seltext_m = 'Document Type'.
+wa_fieldcat-col_pos = 4.
+APPEND wa_fieldcat TO it_fieldcat.
+
+
+*Defining ALV Layout!
+DATA: wa_layout TYPE slis_layout_alv.
+
+CLEAR wa_layout.
+wa_layout-zebra = 'X'.
+wa_layout-colwidth_optimize = 'X'.
+wa_layout-detail_popup = 'X'.
+wa_layout-totals_before_items = 'X'.
+
+
+*Calling Function
+CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+
+EXPORTING
+it_fieldcat = it_fieldcat
+is_layout = wa_layout
+
+TABLES
+t_outtab = it_tb1.
+
+END-OF-SELECTION.
