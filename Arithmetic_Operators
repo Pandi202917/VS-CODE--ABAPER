@@ -1,0 +1,27 @@
+REPORT Z_BASIC_ARITHMETIC_PROGRAM.
+DATA: a TYPE i VALUE 29.
+DATA: b TYPE i VALUE 20.
+DATA: c TYPE i VALUE 17.
+DATA: Addition TYPE i.
+DATA: Subtraction TYPE i.
+DATA: Multiplication TYPE i.    
+DATA: Division TYPE i.
+DATA: Integer_Division TYPE i.
+DATA Modulus TYPE i.
+
+Addition = a + b + c.
+Subtraction = a - b.
+Multiplication = ( a * b ) * ( b * c ).
+Division = a / b.
+Integer_Division = a DIV b.
+Modulus = b MOD c.
+
+WRITE:'a:',a.
+WRITE:'b:',b.
+Write:'c:',c.
+
+WRITE:'Sum of (A,B,C):',Addition,'Difference b/w A&B:',Subtraction.
+WRITE:'Product of (A*B)*(B*C):',Multiplication,'   ','Division of A&B:',Division.
+WRITE:'Quotient of A/B:',Integer_Division,'   ','Reminder of B/C:',Modulus.
+
+WRITE:'THANK YOU!'.
