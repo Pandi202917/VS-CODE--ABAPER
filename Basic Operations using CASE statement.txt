@@ -1,0 +1,57 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_CALCULATOR1
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+*Task 2: Basic Variable and Control Statement Practice.
+*Create an executable program (Z_CALCULATOR).
+*Implement a selection screen with input parameters for two numbers and an operation (+, -, *, /).
+*Use variables to store the input values.
+*Use case statement to perform thevselected operation.
+*Output the result.
+*Add error handling for division by zero using if-else.
+
+
+REPORT z_calculator1.
+
+*Define input parameters
+PARAMETERS: a       TYPE i,
+            b       TYPE i,
+            process TYPE string.
+
+
+*Declaring the Variables to store the result of the operations
+DATA: c TYPE i,
+      d TYPE i,
+      e TYPE i,
+      f TYPE i.
+
+*ARITHMETIC OPERATIONS
+
+*Case Statement (CASE...ENDCASE..)
+CASE process.
+  WHEN '+'.
+    c = a + b.
+    WRITE:/'SUM OF',a,'&',b,' is:',c.
+
+  WHEN  '-'.
+    d = a - b.
+    WRITE:/'SUB OF',a,'&',b,' is:',d.
+
+  WHEN '*'.
+    e = a * b.
+    WRITE:/'MUL OF',a,'&',b,' is:',e.
+
+  WHEN '/'.
+
+    IF b = 0.
+      WRITE: 'SORRY, DIVISION BY ZERO (0) IS NOT ALLOWED IN THE MATHEMATICS!!!.'.
+    ELSE.
+      f = a / b.
+      WRITE:/'DIV OF',a,'&',b,' is:',f.
+    ENDIF.
+
+ENDCASE.
