@@ -1,0 +1,71 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_CALCULATOR3
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+*Task 2: Basic Variable and Control Statement Practice USING KEYWORD RADIOBUTTON.
+*Create an executable program (Z_CALCULATOR).
+*Implement a selection screen with input parameters for two numbers and an operation (+, -, *, /o).
+*Use Radiobutton type
+*Use variables to store the input values.
+*Use case statement to perform thevselected operation.
+*Output the result.
+*Add error handling for division by zero using if-else.
+
+
+*What is Radiobutton:
+*A radio button is a type of graphical user interface (GUI) element
+*that allows users to select only one option from a predefined set of choices.
+*When a user selects one radio button, any previously selected radio button in the same
+*group is automatically deselected.
+
+
+
+REPORT z_calculator3.
+
+*Define input parameters
+PARAMETERS: a TYPE i,
+            b TYPE i.
+
+*Define radiobutton input parameters
+PARAMETERS: add RADIOBUTTON GROUP aa DEFAULT 'X',
+            sub RADIOBUTTON GROUP aa,
+            mul RADIOBUTTON GROUP aa,
+            div RADIOBUTTON GROUP aa.
+
+*Declaring the Variables to store the result of the operations
+DATA: c TYPE i,
+      d TYPE i,
+      e TYPE i,
+      f TYPE i.
+
+*ARITHMETIC OPERATIONS
+
+
+*Case Statement (CASE...ENDCASE..)
+CASE 'X'.
+  WHEN add.
+    c = a + b.
+    WRITE:/'SUM OF',a,'&',b,' is:',c.
+
+  WHEN  sub.
+    d = a - b.
+    WRITE:/'SUB OF',a,'&',b,' is:',d.
+
+  WHEN mul.
+    e = a * b.
+    WRITE:/'MUL OF',a,'&',b,' is:',e.
+
+  WHEN div.
+
+    IF b = 0.
+      WRITE: 'SORRY, DIVISION BY ZERO (0) IS NOT ALLOWED IN THE MATHEMATICS!!!.'.
+    ELSE.
+      f = a / b.
+      WRITE:/'DIV OF',a,'&',b,' is:',f.
+    ENDIF.
+
+ENDCASE.
