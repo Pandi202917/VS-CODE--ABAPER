@@ -1,0 +1,108 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_PRPO_TRACKER_SIMPLE01
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+REPORT z_prpo_tracker_simple01.
+
+TABLES: eban. "PR TABLE
+
+
+*Defining Structure
+TYPES: BEGIN OF ty_output,
+         banfn  TYPE eban-banfn, " PR Number
+         bnfpo  TYPE eban-bnfpo, " PR Item No.
+         matnr  TYPE eban-matnr, " Material Number
+         menge  TYPE eban-menge, " PR Qty
+         werks  TYPE eban-werks, " Plant
+         ernam  TYPE eban-ernam, " PR Requisitioner
+         ebeln  TYPE ekpo-ebeln, " PO Number
+         status TYPE char20,     " PR Status
+       END OF ty_output.
+
+
+*Variable Declaration
+DATA: it_output TYPE TABLE OF ty_output,
+      wa_output TYPE ty_output,
+
+      it_eban   TYPE TABLE OF ty_output,
+      wa_eban   TYPE ty_output,
+
+      it_ekpo   TYPE TABLE OF ekpo,
+      wa_ekpo   TYPE ekpo.
+
+
+
+
+*Select option is used to select the range of values.
+SELECT-OPTIONS: s_banfn FOR eban-banfn, " selecting the PR Number
+                s_werks FOR eban-werks, " selecting the Plant
+                s_ernam FOR eban-ernam. " selecting the PR Requisitioner
+
+
+
+
+START-OF-SELECTION.
+
+*Selection Query - TO retrive the PR data from EBAN table
+  SELECT banfn, bnfpo, matnr, menge, werks, ernam "(PR, PRItem, MaterialNo, PRQty, Plant, PR Requisitioner)
+    FROM eban
+    INTO TABLE @it_eban
+    WHERE banfn IN @s_banfn
+      AND werks IN @s_werks
+      AND ernam IN @s_ernam.
+
+
+
+*Selection Query - TO retrive the PO data from EKPO table
+  IF it_eban IS NOT INITIAL.
+    SELECT ebeln, banfn, bnfpo
+      FROM ekpo
+      INTO TABLE @it_ekpo
+      FOR ALL ENTRIES IN @it_eban
+      WHERE banfn = @it_eban-banfn
+        AND bnfpo = @it_eban-bnfpo.
+
+
+
+*MOVE-CORRESPONDING is a convenient ABAP statement used to copy values from one structure to another when both structures have fields with the same names.
+
+
+* Updating the PO Status in the Table
+    LOOP AT it_eban INTO wa_eban.
+      CLEAR wa_output.
+      MOVE-CORRESPONDING wa_eban TO wa_output.
+
+
+      READ TABLE it_ekpo INTO wa_ekpo
+           WITH KEY banfn = wa_eban-banfn
+                    bnfpo = wa_eban-bnfpo.
+
+
+      IF sy-subrc = 0.
+        wa_output-ebeln = wa_ekpo-ebeln.
+        wa_output-status = 'Converted to PO'.
+      ELSE.
+        wa_output-status = 'Not Converted'.
+      ENDIF.
+
+      APPEND wa_output TO it_output.
+
+    ENDLOOP.
+
+  ENDIF.
+
+
+*Output:
+  LOOP AT it_output INTO wa_output.
+    WRITE: / 'PR:', wa_output-banfn,
+             'Item:', wa_output-bnfpo,
+             'Material:', wa_output-matnr,
+             'Qty:', wa_output-menge,
+             'Plant:', wa_output-werks,
+             'By:', wa_output-ernam,
+             'PO:', wa_output-ebeln,
+             'Status:', wa_output-status.
+  ENDLOOP.
